@@ -41,12 +41,19 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-/* Definitions for defaultTask */
-osThreadId_t defaultTaskHandle;
-const osThreadAttr_t defaultTask_attributes = {
-  .name = "defaultTask",
+/* Definitions for LEDTask */
+osThreadId_t LEDTaskHandle;
+const osThreadAttr_t LEDTask_attributes = {
+  .name = "LEDTask",
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
+};
+/* Definitions for ENTask02 */
+osThreadId_t ENTask02Handle;
+const osThreadAttr_t ENTask02_attributes = {
+  .name = "ENTask02",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityLow,
 };
 /* USER CODE BEGIN PV */
 
@@ -55,7 +62,8 @@ const osThreadAttr_t defaultTask_attributes = {
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-void StartDefaultTask(void *argument);
+void StartLEDTask(void *argument);
+void StartENTask02(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -119,8 +127,11 @@ int main(void)
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
-  /* creation of defaultTask */
-  defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+  /* creation of LEDTask */
+  LEDTaskHandle = osThreadNew(StartLEDTask, NULL, &LEDTask_attributes);
+
+  /* creation of ENTask02 */
+  ENTask02Handle = osThreadNew(StartENTask02, NULL, &ENTask02_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -229,14 +240,14 @@ while(1);
 
 /* USER CODE END 4 */
 
-/* USER CODE BEGIN Header_StartDefaultTask */
+/* USER CODE BEGIN Header_StartLEDTask */
 /**
-  * @brief  Function implementing the defaultTask thread.
+  * @brief  Function implementing the LEDTask thread.
   * @param  argument: Not used
   * @retval None
   */
-/* USER CODE END Header_StartDefaultTask */
-void StartDefaultTask(void *argument)
+/* USER CODE END Header_StartLEDTask */
+void StartLEDTask(void *argument)
 {
   /* USER CODE BEGIN 5 */
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
@@ -247,6 +258,24 @@ void StartDefaultTask(void *argument)
     osDelay(1);
   }
   /* USER CODE END 5 */
+}
+
+/* USER CODE BEGIN Header_StartENTask02 */
+/**
+* @brief Function implementing the ENTask02 thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartENTask02 */
+void StartENTask02(void *argument)
+{
+  /* USER CODE BEGIN StartENTask02 */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END StartENTask02 */
 }
 
 /**
