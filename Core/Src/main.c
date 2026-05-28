@@ -48,10 +48,10 @@ const osThreadAttr_t LEDTask_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
-/* Definitions for ENTask02 */
-osThreadId_t ENTask02Handle;
-const osThreadAttr_t ENTask02_attributes = {
-  .name = "ENTask02",
+/* Definitions for LEDTaskoff */
+osThreadId_t LEDTaskoffHandle;
+const osThreadAttr_t LEDTaskoff_attributes = {
+  .name = "LEDTaskoff",
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
@@ -63,7 +63,7 @@ const osThreadAttr_t ENTask02_attributes = {
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 void StartLEDTask(void *argument);
-void StartENTask02(void *argument);
+void StartLEDTaskoff(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -130,8 +130,8 @@ int main(void)
   /* creation of LEDTask */
   LEDTaskHandle = osThreadNew(StartLEDTask, NULL, &LEDTask_attributes);
 
-  /* creation of ENTask02 */
-  ENTask02Handle = osThreadNew(StartENTask02, NULL, &ENTask02_attributes);
+  /* creation of LEDTaskoff */
+  LEDTaskoffHandle = osThreadNew(StartLEDTaskoff, NULL, &LEDTaskoff_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -231,8 +231,8 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
-HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
-while(1);
+//HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
+
   /* USER CODE END MX_GPIO_Init_2 */
 }
 
@@ -250,32 +250,37 @@ while(1);
 void StartLEDTask(void *argument)
 {
   /* USER CODE BEGIN 5 */
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
+	
   /* Infinite loop */
   for(;;)
   {
+	  osDelay(500);
 //	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
-    osDelay(1);
+//	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
+      
   }
   /* USER CODE END 5 */
 }
 
-/* USER CODE BEGIN Header_StartENTask02 */
+/* USER CODE BEGIN Header_StartLEDTaskoff */
 /**
-* @brief Function implementing the ENTask02 thread.
+* @brief Function implementing the LEDTaskoff thread.
 * @param argument: Not used
 * @retval None
 */
-/* USER CODE END Header_StartENTask02 */
-void StartENTask02(void *argument)
+/* USER CODE END Header_StartLEDTaskoff */
+void StartLEDTaskoff(void *argument)
 {
-  /* USER CODE BEGIN StartENTask02 */
+  /* USER CODE BEGIN StartLEDTaskoff */
+	
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+	  osDelay(1000);
+	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
+      
   }
-  /* USER CODE END StartENTask02 */
+  /* USER CODE END StartLEDTaskoff */
 }
 
 /**
